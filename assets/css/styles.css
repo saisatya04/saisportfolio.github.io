@@ -181,6 +181,67 @@ img {
   font-size: 1rem;
 }
 
+/* =====DOMAIN======= */
+
+.domain__container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.domain__subtitle {
+  font-size: 1.5rem;
+  color: #1f2a40;
+  margin-bottom: 1rem;
+}
+
+.domain__text {
+  color: #333;
+  font-size: 1rem;
+}
+
+/* ===== Business Cases ===== */
+/* Business Case Cards */
+.business-cases {
+  padding: 3rem 2rem;
+  background-color: #f0f4f8;
+  text-align: center;
+  margin-top: 3rem;
+}
+
+.cards-container {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.case-card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 2rem 1.5rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.case-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.case-card h3 {
+  color: #1f2a40;
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+}
+
+.case-card p {
+  color: #333;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
 /*===== SKILLS =====*/
 .skills__container {
   display: flex;
@@ -332,17 +393,20 @@ img {
   }
 
   .about__container,
-  .skills__container {
+  .skills__container,
+  .domain__container {
     flex-direction: row;
   }
 
   .about__img,
-  .skills__img {
+  .skills__img,
+  .domain__img {
     flex: 1;
   }
 
   .about__text,
-  .skills__text {
+  .skills__text,
+  .domain__text {
     flex: 2;
   }
 }
