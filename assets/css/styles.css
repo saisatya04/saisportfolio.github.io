@@ -160,9 +160,8 @@ img {
 }
 
 .home__social {
-  position: absolute;
-  top: 372px;
-  right: 30%;
+  position: relative;
+  top: 10px;
 }
 
 /*===== ABOUT =====*/
