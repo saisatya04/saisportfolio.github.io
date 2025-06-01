@@ -222,6 +222,7 @@ img {
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   padding: 2rem 1.5rem;
+  cursor: pointer;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -240,6 +241,42 @@ img {
   color: #1e1b18;
   font-size: 0.95rem;
   line-height: 1.5;
+}
+
+.case-card:link,
+.case-card:visited {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Styles for the case details page */
+.case-details__container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  padding: 2rem;
+}
+
+.case-details__img img {
+  width: 100%;
+  border-radius: 10px;
+}
+
+.case-details__subtitle {
+  font-size: 1.5rem;
+  margin: 1rem 0 0.5rem;
+}
+
+.case-details__text {
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+@media screen and (max-width: 768px) {
+  .case-details__container {
+    grid-template-columns: 1fr;
+  }
 }
 
 /*===== SKILLS =====*/
@@ -262,7 +299,6 @@ img {
 .skills__data {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   margin-bottom: 1rem;
 }
 
@@ -271,28 +307,64 @@ img {
   align-items: center;
   gap: 0.5rem;
   font-weight: 600;
+  min-width: 15rem;
 }
 
-.skills__icon {
-  font-size: 1.2rem;
-  color: #0a2463;
-}
-
+/* Ensure the skills bar container has a consistent style */
 .skills__bar {
-  width: 100%;
-  height: 5px;
-  background-color: #0a2463;
-  margin: 0 1rem;
-  flex-grow: 1;
-  transition: background-color 0.3s ease;
+  justify-content: flex-start;
+  height: 10px;
+  border-radius: 5px;
+  background-color: #ddd; /* Fallback background */
+}
+
+/* Ensure icons are visible and styled consistently */
+.skills__icon {
+  font-size: 2rem;
+  margin-right: 10px;
+  color: #333; /* Adjust color to match your theme */
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .skills__bar:hover {
   background-color: #d8315b;
 }
 
-.skills__percentage {
-  font-size: 0.875rem;
+.skills__mern {
+  width: 35%;
+  background-color: #4caf50; /* Green for MERN */
+}
+
+.skills__django {
+  width: 27%;
+  background-color: #2196f3; /* Blue for Django */
+}
+
+.skills__tensorflow {
+  width: 55%;
+  background-color: #ff9800; /* Orange for TensorFlow */
+}
+
+.skills__pytorch {
+  width: 40%;
+  background-color: #f44336; /* Red for PyTorch */
+}
+
+.skills__cpp {
+  width: 51%;
+  background-color: #673ab7; /* Purple for C/C++ */
+}
+
+.skills__problem {
+  width: 47%;
+  background-color: #ffc107; /* Yellow for Problem Solving */
+}
+
+.skills__img {
+  height: 70%;
+  width: 90%;
+  padding-top: 2rem;
 }
 
 /*===== WORK =====*/
@@ -315,6 +387,7 @@ img {
 }
 
 /*===== CONTACT =====*/
+
 .contact__form {
   display: flex;
   flex-direction: column;
@@ -341,6 +414,8 @@ img {
 .contact__button {
   background-color: #d8315b;
   color: #fbf7f7;
+  width: 10rem;
+  margin: auto;
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.3s ease;
@@ -349,6 +424,11 @@ img {
 .contact__button:hover {
   background-color: #3e92cc;
   transform: scale(1.05);
+}
+
+#statusMsg {
+  margin: auto;
+  align-items: center;
 }
 
 /*===== FOOTER =====*/
@@ -402,7 +482,6 @@ img {
   }
 
   .about__img,
-  .skills__img,
   .domain__img {
     flex: 1;
   }
@@ -411,5 +490,13 @@ img {
   .skills__text,
   .domain__text {
     flex: 2;
+  }
+
+  .case-details__container {
+    grid-template-columns: 1fr;
+  }
+
+  .skills__icon {
+    font-size: 1.5rem;
   }
 }
