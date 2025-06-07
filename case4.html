@@ -4,15 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="assets/css/styles.css" />
-    <!-- =====BOX ICONS===== -->
     <link
       href="https://cdn.jsdelivr.net/npm/boxicons@2.0.5/css/boxicons.min.css"
       rel="stylesheet"
     />
-    <title>Business Case Details - Sai's Portfolio</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css"
+      rel="stylesheet"
+    />
+    <title>LinkedIn Recommendation System - Sai's Portfolio</title>
   </head>
   <body>
-    <!--===== HEADER =====-->
     <header class="l-header">
       <nav class="nav bd-grid">
         <div>
@@ -24,7 +26,9 @@
               <a href="index.html#home" class="nav__link">Home</a>
             </li>
             <li class="nav__item">
-              <a href="index.html#business-cases" class="nav__link">Back to Cases</a>
+              <a href="index.html#business-cases" class="nav__link"
+                >Back to Cases</a
+              >
             </li>
           </ul>
         </div>
@@ -32,32 +36,336 @@
     </header>
 
     <main class="l-main">
-      <!--===== CASE DETAILS =====-->
       <section class="case-details section" id="case-details">
-        <h2 class="section-title">Business Case: [Case Title]</h2>
-        <div class="case-details__container bd-grid">
+        <h2 class="section-title">
+          User Recommendation Using Uniform Cost Search and PageRank with
+          Activity-Based Heuristics
+        </h2>
+        <div class="case-details__container">
           <div class="case-details__img">
-            <img src="assets/img/case-placeholder.jpg" alt="[Case Title]" />
+            <img
+              src="assets/img/recommendation-ucs-arch.png"
+              alt="UCS Recommendation Architecture"
+            />
           </div>
           <div>
+            <h3 class="case-details__subtitle">Introduction</h3>
+            <p class="case-details__text">
+              This system proposes a graph-based recommendation engine for a
+              professional networking platform (e.g., LinkedIn-like) that
+              integrates Uniform Cost Search (UCS), activity-aware heuristics,
+              and PageRank. It enhances traditional connection suggestions by
+              considering user interaction cost, activity levels, and community
+              structures using Louvain and Union-Find clustering techniques.
+            </p>
+
             <h3 class="case-details__subtitle">Overview</h3>
             <p class="case-details__text">
-              [Insert detailed overview of the business case here. Describe the problem, its impact, and the context within Microsoft's ecosystem.]
+              The approach uses UCS to find relevant users based on minimal cost
+              paths in a user graph. Users are ranked via a customized PageRank
+              that incorporates user activity. The final score is a balance of
+              rank and reachability. This recommendation system:
             </p>
-            <h3 class="case-details__subtitle">Proposed Solution</h3>
+            <ul>
+              <li>Finds shortest social paths via Uniform Cost Search</li>
+              <li>Ranks users based on PageRank × activity</li>
+              <li>
+                Incorporates community detection using Louvain and Union-Find
+              </li>
+            </ul>
+
+            <h3 class="case-details__subtitle">Methodology</h3>
+            <ol>
+              <li>
+                <strong>Graph Construction:</strong> Users are nodes, and edges
+                are weighted by interaction strength, shared interests, and
+                message frequency.
+              </li>
+              <li>
+                <strong>Edge Cost Definition:</strong> Cost is defined as
+                inverse of interaction strength and user activity:
+                <code
+                  >cost(u, v) = 1 / (interaction(u, v) + α × activity(v))</code
+                >
+              </li>
+              <li>
+                <strong>UCS Traversal:</strong> For a target user, UCS returns
+                the lowest cost paths to other users.
+              </li>
+              <li>
+                <strong>PageRank Enhancement:</strong> PageRank score is
+                weighted by user activity:
+                <code>PR'(u) = PageRank(u) × Activity(u)</code>
+              </li>
+              <li>
+                <strong>Final Score:</strong> Combine both metrics:
+                <code>FinalScore(u) = PR'(u) / UCS_Cost(u)</code>
+              </li>
+              <li>
+                <strong>Community Detection:</strong> Louvain and Union-Find
+                improve relevance by recommending users from the same community
+                first.
+              </li>
+            </ol>
+
+            <h3 class="case-details__subtitle">Code Snippet (UCS Example)</h3>
+            <pre><code class="language-python case_code">
+# graph_builder.py
+import networkx as nx
+
+def build_graph(interactions):
+    G = nx.DiGraph()
+    for u, v, weight in interactions:
+        G.add_edge(u, v, weight=weight)
+    return G
+
+# activity_heuristics.py
+def compute_activity_scores(interactions):
+    activity = {}
+    for u, v, _ in interactions:
+        activity[u] = activity.get(u, 0) + 1
+    return activity
+
+# pagerank_enhanced.py
+import networkx as nx
+
+def compute_enhanced_pagerank(G, activity, alpha=0.85):
+    pr = nx.pagerank(G, alpha=alpha)
+    pr_enhanced = {}
+    for node in G.nodes:
+        pr_enhanced[node] = pr.get(node, 0) + 0.1 * activity.get(node, 0)
+    return pr_enhanced
+
+# ucs_recommender.py
+import heapq
+
+def ucs_recommend(G, source, scores, top_k=5):
+    queue = [(0, source, [])]
+    visited = set()
+    recommendations = []
+
+    while queue and len(recommendations) < top_k:
+        cost, current, path = heapq.heappop(queue)
+        if current in visited:
+            continue
+        visited.add(current)
+        path = path + [current]
+
+        if current != source:
+            recommendations.append((current, cost, path))
+
+        for neighbor in G.successors(current):
+            weight = G[current][neighbor].get('weight', 1)
+            score = scores.get(neighbor, 1)
+            total_cost = cost + weight / (score + 1e-6)
+            heapq.heappush(queue, (total_cost, neighbor, path))
+
+    return recommendations
+
+# community_detection.py
+import networkx as nx
+from networkx.algorithms.community import louvain_communities
+
+def detect_communities(G):
+    return louvain_communities(G)
+
+# main.py
+from graph_builder import build_graph
+from activity_heuristics import compute_activity_scores
+from pagerank_enhanced import compute_enhanced_pagerank
+from ucs_recommender import ucs_recommend
+from community_detection import detect_communities
+
+# Example interaction data: (user1, user2, weight)
+interactions = [
+    ('A', 'B', 1), ('A', 'C', 2), ('B', 'D', 1),
+    ('C', 'D', 3), ('D', 'E', 2), ('E', 'F', 1)
+]
+
+G = build_graph(interactions)
+activity = compute_activity_scores(interactions)
+scores = compute_enhanced_pagerank(G, activity)
+recommendations = ucs_recommend(G, 'A', scores)
+
+print("Top Recommendations:")
+for user, cost, path in recommendations:
+    print(f"User: {user}, Cost: {cost:.2f}, Path: {path}")
+
+print("\nCommunities:")
+communities = detect_communities(G.to_undirected())
+for i, community in enumerate(communities):
+    print(f"Community {i+1}: {sorted(community)}")
+</code></pre>
+
+            <h3 class="case-details__subtitle">
+              Code Snippet (Louvain Algorithm for community detection)
+            </h3>
+            <pre><code class="language-python case_code">
+  # low_level_louvain.py
+import networkx as nx
+from collections import defaultdict
+
+def compute_modularity(G, communities, m):
+    Q = 0.0
+    degrees = dict(G.degree(weight='weight'))
+    
+    for community in communities.values():
+        for u in community:
+            for v in community:
+                A_uv = G[u][v]['weight'] if G.has_edge(u, v) else 0
+                Q += A_uv - (degrees[u] * degrees[v]) / (2 * m)
+    
+    return Q / (2 * m)
+
+def louvain_algorithm(G):
+    G = G.copy()
+    m = G.size(weight='weight')
+    node2com = {node: i for i, node in enumerate(G.nodes())}
+    improvement = True
+
+    while improvement:
+        improvement = False
+        nodes = list(G.nodes())
+        for node in nodes:
+            best_com = node2com[node]
+            best_gain = 0
+            neigh_coms = defaultdict(float)
+
+            # Calculate community weights of neighbors
+            for neighbor in G.neighbors(node):
+                if neighbor == node:
+                    continue
+                weight = G[node][neighbor].get('weight', 1)
+                neigh_coms[node2com[neighbor]] += weight
+
+            # Remove node from current community
+            current_com = node2com[node]
+            total_weight = sum(G[node][nbr].get('weight', 1) for nbr in G.neighbors(node))
+
+            for com, dnode2com in neigh_coms.items():
+                if com == current_com:
+                    continue
+                gain = dnode2com - total_weight * sum(G.degree(n, weight='weight') for n in G.nodes() if node2com[n] == com) / (2 * m)
+                if gain > best_gain:
+                    best_gain = gain
+                    best_com = com
+
+            if best_com != current_com:
+                node2com[node] = best_com
+                improvement = True
+
+        # Optional aggregation into meta-graph could go here
+        # Skipping meta-graph level in this simple version
+
+    # Collect communities
+    communities = defaultdict(list)
+    for node, com_id in node2com.items():
+        communities[com_id].append(node)
+
+    return list(communities.values())
+
+ </code></pre>
+
+            <h3 class="case-details__subtitle">Architecture</h3>
+            <ul>
+              <li>
+                <strong>User Graph Builder</strong>: Creates graph using
+                interaction logs and profile data
+              </li>
+              <li>
+                <strong>Activity Tracker</strong>: Maintains recent activity
+                scores (logins, posts, messages)
+              </li>
+              <li><strong>UCS Module</strong>: Finds lowest-cost user paths</li>
+              <li>
+                <strong>PageRank Engine</strong>: Computes activity-weighted
+                centrality
+              </li>
+              <li>
+                <strong>Recommendation Engine</strong>: Combines cost and rank
+                to suggest users
+              </li>
+            </ul>
+
+            <h3 class="case-details__subtitle">Advantages</h3>
+            <ul>
+              <li>
+                <strong>Path-Aware:</strong> Recommends reachable users with
+                meaningful connection chains
+              </li>
+              <li>
+                <strong>Heuristic Boost:</strong> Activity adds personalization
+                and freshness
+              </li>
+              <li>
+                <strong>Community Detection:</strong> Union-Find and Louvain
+                improve contextual relevance
+              </li>
+              <li>
+                <strong>Fair Ranking:</strong> Avoids popularity bias via
+                path-based evaluation
+              </li>
+            </ul>
+
+            <h3 class="case-details__subtitle">Disadvantages</h3>
+            <ul>
+              <li>
+                <strong>Scalability:</strong> UCS can be slow on large graphs
+                unless pruned
+              </li>
+              <li>
+                <strong>Parameter Sensitivity:</strong> α (activity weight)
+                needs tuning
+              </li>
+              <li>
+                <strong>Cold Start:</strong> New users may lack data for
+                PageRank or UCS
+              </li>
+              <li>
+                <strong>Data Freshness:</strong> Requires periodic updates for
+                activity and interaction weights
+              </li>
+            </ul>
+
+            <h3 class="case-details__subtitle">Time and Space Complexity</h3>
+            <ul>
+              <li>
+                <strong>Uniform Cost Search:</strong> O(E log V), using priority
+                queue and adjacency list
+              </li>
+              <li>
+                <strong>PageRank:</strong> O(k × (V + E)), where k is the number
+                of iterations
+              </li>
+              <li>
+                <strong>Union-Find:</strong> Nearly O(1) per operation with path
+                compression
+              </li>
+              <li>
+                <strong>Louvain:</strong> O(n log n), depending on resolution
+                and modularity convergence
+              </li>
+              <li>
+                <strong>Total Space:</strong> O(V + E) for the graph, plus O(V)
+                for user metadata
+              </li>
+            </ul>
+
+            <h3 class="case-details__subtitle">Conclusion</h3>
             <p class="case-details__text">
-              [Insert proposed solution or approach to address the business case. Highlight technical details, potential technologies, or strategies involved.]
-            </p>
-            <h3 class="case-details__subtitle">Impact</h3>
-            <p class="case-details__text">
-              [Insert potential impact of the solution, such as improved performance, user experience, or business outcomes.]
+              This hybrid approach integrates cost-based and rank-based models
+              to build a smarter, activity-aware recommendation engine. It uses
+              UCS to capture real-world interaction paths and PageRank to
+              identify influential nodes, enhancing personalization via activity
+              and community structure. Despite complexity challenges, this
+              system ensures contextually relevant and fresh user suggestions in
+              social and professional networking platforms.
             </p>
           </div>
         </div>
       </section>
     </main>
 
-    <!--===== FOOTER =====-->
     <footer class="footer">
       <p class="footer__title">Sai Satya</p>
       <div class="footer__social">
@@ -72,9 +380,10 @@
       <p class="footer__copy">© Sai Satya. All rights reserved</p>
     </footer>
 
-    <!--===== SCROLL REVEAL =====-->
     <script src="https://unpkg.com/scrollreveal"></script>
-    <!--===== MAIN JS =====-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-text.min.js"></script>
     <script src="assets/js/main.js"></script>
   </body>
 </html>

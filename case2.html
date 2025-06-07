@@ -4,15 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="assets/css/styles.css" />
-    <!-- =====BOX ICONS===== -->
     <link
       href="https://cdn.jsdelivr.net/npm/boxicons@2.0.5/css/boxicons.min.css"
       rel="stylesheet"
     />
-    <title>Business Case Details - Sai's Portfolio</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css"
+      rel="stylesheet"
+    />
+    <title>Video Compression and Access - Sai's Portfolio</title>
   </head>
   <body>
-    <!--===== HEADER =====-->
     <header class="l-header">
       <nav class="nav bd-grid">
         <div>
@@ -24,7 +26,9 @@
               <a href="index.html#home" class="nav__link">Home</a>
             </li>
             <li class="nav__item">
-              <a href="index.html#business-cases" class="nav__link">Back to Cases</a>
+              <a href="index.html#business-cases" class="nav__link"
+                >Back to Cases</a
+              >
             </li>
           </ul>
         </div>
@@ -32,32 +36,268 @@
     </header>
 
     <main class="l-main">
-      <!--===== CASE DETAILS =====-->
       <section class="case-details section" id="case-details">
-        <h2 class="section-title">Business Case: [Case Title]</h2>
-        <div class="case-details__container bd-grid">
-          <div class="case-details__img">
-            <img src="assets/img/case-placeholder.jpg" alt="[Case Title]" />
-          </div>
+        <h2 class="section-title">
+          Video Compression and Access Optimization for a Streaming Platform on
+          Azure
+        </h2>
+        <div class="case-details__container">
           <div>
+            <h3 class="case-details__subtitle">Introduction</h3>
+            <p class="case-details__text">
+              This streaming platform on Azure delivers high-quality video to
+              50,000 concurrent users during peak hours, minimizing bandwidth
+              usage and latency. By enhancing the H.265/HEVC compression
+              pipeline with Run-Length Encoding (RLE) and leveraging Azure’s
+              infrastructure (CDN, Blob Storage), this approach reduces bitrate
+              from 2.5 Mbps to ~2.3 Mbps for 1080p video, lowering network costs
+              while maintaining quality.
+            </p>
+
             <h3 class="case-details__subtitle">Overview</h3>
             <p class="case-details__text">
-              [Insert detailed overview of the business case here. Describe the problem, its impact, and the context within Microsoft's ecosystem.]
+              The design optimizes video compression and access for efficient
+              streaming:
             </p>
-            <h3 class="case-details__subtitle">Proposed Solution</h3>
-            <p class="case-details__text">
-              [Insert proposed solution or approach to address the business case. Highlight technical details, potential technologies, or strategies involved.]
-            </p>
-            <h3 class="case-details__subtitle">Impact</h3>
-            <p class="case-details__text">
-              [Insert potential impact of the solution, such as improved performance, user experience, or business outcomes.]
-            </p>
+            <ul>
+              <li>
+                <strong>Video Compression</strong>: Integrates RLE into the
+                H.265/HEVC pipeline after quantization to compress runs of
+                identical values (e.g., zeros in static scenes), reducing
+                bitstream size before CABAC encoding.
+              </li>
+              <li>
+                <strong>Access Optimization</strong>: Uses Azure CDN, Blob
+                Storage, Load Balancer, and Traffic Manager for low-latency
+                delivery (20–50 ms) without LRU caching.
+              </li>
+              <li>
+                <strong>Goal</strong>: Support 50,000 users at ~115 Gbps (2.3
+                Mbps per user) with enhanced compression and scalability.
+              </li>
+            </ul>
+
+            <div class="section">
+              <h2>System Design</h2>
+              <h3>Components and Roles</h3>
+              <ul>
+                <li>
+                  <strong>Video Source</strong>: Provides raw, uncompressed
+                  1080p video (e.g., 360 MB for 2 seconds).
+                </li>
+                <li>
+                  <strong>Azure Media Services</strong>: Encodes raw video using
+                  H.265/HEVC with RLE and adaptive bitrate streaming (ABR).
+                </li>
+                <li>
+                  <strong>H.265/HEVC Encoder with RLE and CABAC</strong>:
+                  Compresses frames, applying RLE to quantized coefficients
+                  before CABAC encoding.
+                </li>
+                <li>
+                  <strong>Azure Blob Storage</strong>: Stores compressed video
+                  files for high availability.
+                </li>
+                <li>
+                  <strong>Azure CDN</strong>: Distributes video content at edge
+                  nodes (no LRU caching).
+                </li>
+                <li>
+                  <strong>Azure Load Balancer</strong>: Distributes streaming
+                  requests across media servers.
+                </li>
+                <li>
+                  <strong>Azure Traffic Manager</strong>: Routes users to the
+                  nearest data center.
+                </li>
+                <li>
+                  <strong>End Users</strong>: Stream video on devices (50,000
+                  users at 2.3 Mbps each).
+                </li>
+              </ul>
+
+              <h3>System Design Diagram</h3>
+              <div class="case-details__img">
+                <img
+                  src="assets/img/compression.drawio.png"
+                  alt="Video Compression Strategy"
+                />
+              </div>
+
+              <h3>Workflow</h3>
+              <ol>
+                <li>
+                  <strong>Video Source → Azure Media Services</strong>: Raw
+                  video (360 MB for 2 seconds) is uploaded.
+                </li>
+                <li>
+                  <strong>Azure Media Services ↔ H.265/HEVC Encoder</strong>:
+                  Frames are partitioned into CTUs, processed with prediction,
+                  residuals transformed, quantized, RLE-compressed (e.g., [0, 0,
+                  0, 1] → [0:3, 1:1]), and encoded with CABAC, producing a 2.3
+                  Mbps bitstream (0.575 MB for 2 seconds).
+                </li>
+                <li>
+                  <strong>Azure Media Services → Azure Blob Storage</strong>:
+                  Stores compressed video files.
+                </li>
+                <li>
+                  <strong>Azure Blob Storage → Azure CDN</strong>: CDN pulls and
+                  distributes videos to edge nodes.
+                </li>
+                <li>
+                  <strong>Azure CDN ↔ Azure Traffic Manager</strong>: Routes
+                  users to the nearest edge node (20–50 ms latency).
+                </li>
+                <li>
+                  <strong>Azure CDN → Azure Load Balancer</strong>: Distributes
+                  requests to media servers.
+                </li>
+                <li>
+                  <strong>Azure Load Balancer → End Users</strong>: Streams
+                  video to 50,000 users at 115 Gbps total.
+                </li>
+              </ol>
+            </div>
+
+            <div class="section">
+              <h2>Advantages</h2>
+              <ul>
+                <li>
+                  <strong>Improved Compression</strong>: RLE reduces symbols for
+                  CABAC, lowering bitrate from 2.5 Mbps to 2.3 Mbps, saving ~10
+                  Gbps for 50,000 users.
+                </li>
+                <li>
+                  <strong>Bandwidth Savings</strong>: Lower bitrate reduces
+                  Azure network costs and supports more users.
+                </li>
+                <li>
+                  <strong>Static Content Optimization</strong>: Highly effective
+                  for static scenes (e.g., screen sharing), where zero runs are
+                  common.
+                </li>
+                <li>
+                  <strong>Seamless Integration</strong>: RLE fits into the H.265
+                  pipeline with minimal changes.
+                </li>
+              </ul>
+            </div>
+
+            <div class="section">
+              <h2>Disadvantages</h2>
+              <ul>
+                <li>
+                  <strong>Limited Applicability</strong>: RLE excels with static
+                  content but offers marginal gains for dynamic videos.
+                </li>
+                <li>
+                  <strong>Encoding Overhead</strong>: RLE adds ~5% CPU overhead,
+                  slightly increasing encoding time (e.g., 10.5 vs. 10 minutes
+                  for a 2-hour video).
+                </li>
+                <li>
+                  <strong>No LRU Caching</strong>: Excluding caching increases
+                  latency for repeated requests (~50 ms vs.
+                </li>
+                <li>
+                  <strong>Complexity</strong>: Adding RLE increases
+                  implementation and maintenance complexity.
+                </li>
+              </ul>
+            </div>
+
+            <div class="section">
+              <h2>Implementation</h2>
+              <h3>RLE in H.265 Pipeline</h3>
+              <p>
+                RLE is inserted after quantization in the H.265 pipeline, before
+                CABAC encoding:
+              </p>
+              <ul>
+                <li>
+                  Quantization produces coefficients (e.g., [0, 0, 0, 1]).
+                </li>
+                <li>RLE compresses runs (e.g., [0, 0, 0, 1] → [0:3, 1:1]).</li>
+                <li>CABAC encodes the RLE output into the bitstream.</li>
+              </ul>
+              <p>
+                Integration involves modifying the H.265 encoder in Azure Media
+                Services to include RLE, ensuring compatibility with CABAC and
+                decoders.
+              </p>
+
+              <h3>Example Code</h3>
+              <p>Python implementation of RLE for quantized coefficients:</p>
+              <pre><code class="language-python case_code">def run_length_encode(coefficients):
+    # Initialize variables
+    result = []
+    count = 1
+    current = coefficients[0]
+    
+    # Process each coefficient
+    for coef in coefficients[1:]:
+        if coef == current and count < 999:  # Limit run length for practicality
+            count += 1
+        else:
+            result.append(f"{current}:{count}")
+            current = coef
+            count = 1
+    result.append(f"{current}:{count}")
+    
+    return result
+
+# Example usage
+coefficients = [0, 0, 0, 1, 0, 2, 2, 0, 0]
+encoded = run_length_encode(coefficients)
+print(encoded)  # Output: ['0:3', '1:1', '0:1', '2:2', '0:2']
+</code></pre>
+            </div>
+
+            <div class="section">
+              <h2>Time and Space Complexity</h2>
+              <h3>Run-Length Encoding (RLE)</h3>
+              <ul>
+                <li>
+                  <strong>Time Complexity</strong>: O(n), where n is the number
+                  of coefficients (e.g., 1024 for a 32x32 TU).
+                </li>
+                <li>
+                  <strong>Space Complexity</strong>: O(k), where k is the number
+                  of runs (typically k ≤ n).
+                </li>
+              </ul>
+              <h3>Overall H.265 Pipeline with RLE</h3>
+              <ul>
+                <li>
+                  <strong>Time</strong>: RLE adds ~5% overhead to encoding
+                  (e.g., 10.5 vs. 10 minutes for a 2-hour video).
+                </li>
+                <li>
+                  <strong>Space</strong>: Minimal additional memory, integrated
+                  into the bitstream by CABAC.
+                </li>
+              </ul>
+            </div>
+
+            <div class="section">
+              <h2>Conclusion</h2>
+              <p>
+                This enhanced H.265/HEVC pipeline with RLE reduces bitrate from
+                2.5 Mbps to 2.3 Mbps, saving ~10 Gbps for 50,000 users (115 Gbps
+                total). It excels for static content like screen sharing but
+                offers less benefit for dynamic videos and adds ~5% encoding
+                overhead. Omitting LRU caching simplifies the design but
+                increases latency for repeated requests (~50 ms). This approach
+                optimizes bandwidth usage on Azure, supporting 50,000 users with
+                high-quality video and cost efficiency.
+              </p>
+            </div>
           </div>
         </div>
       </section>
     </main>
 
-    <!--===== FOOTER =====-->
     <footer class="footer">
       <p class="footer__title">Sai Satya</p>
       <div class="footer__social">
@@ -72,9 +312,10 @@
       <p class="footer__copy">© Sai Satya. All rights reserved</p>
     </footer>
 
-    <!--===== SCROLL REVEAL =====-->
     <script src="https://unpkg.com/scrollreveal"></script>
-    <!--===== MAIN JS =====-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-text.min.js"></script>
     <script src="assets/js/main.js"></script>
   </body>
 </html>

@@ -34,23 +34,170 @@
     <main class="l-main">
       <!--===== CASE DETAILS =====-->
       <section class="case-details section" id="case-details">
-        <h2 class="section-title">Business Case: [Case Title]</h2>
+        <h2 class="section-title">Business Case: Outlook Loading & Searching Delay</h2>
         <div class="case-details__container bd-grid">
           <div class="case-details__img">
-            <img src="assets/img/case-placeholder.jpg" alt="[Case Title]" />
+            <img src="assets/img/case-placeholder.jpg" alt="Outlook Loading & Searching Delay" />
           </div>
           <div>
             <h3 class="case-details__subtitle">Overview</h3>
             <p class="case-details__text">
-              [Insert detailed overview of the business case here. Describe the problem, its impact, and the context within Microsoft's ecosystem.]
+              Outlook, a key component of Microsoft's productivity suite, must minimize loading and searching delays to enhance user experience. Two critical challenges are enabling fast autocompletion for email addresses or search queries and ensuring relevant search results with minimal latency. Slow autocompletion frustrates users during input, while inefficient search ranking and retrieval can delay access to important emails, reducing productivity and user satisfaction.
             </p>
             <h3 class="case-details__subtitle">Proposed Solution</h3>
             <p class="case-details__text">
-              [Insert proposed solution or approach to address the business case. Highlight technical details, potential technologies, or strategies involved.]
+              To tackle these challenges, Outlook can implement two non-AI techniques: Trie Structure for autocompletion and BM25/TF-IDF with Inverted Indexing for efficient search and ranking. Below is a detailed breakdown of each technique, including their advantages, disadvantages, time and space complexities, and C++ code implementations.
             </p>
+
+            <h4 class="case-details__subsubtitle">Trie Structure</h4>
+            <p class="case-details__text">
+              <strong>Description:</strong> A Trie (prefix tree) is a tree-like data structure where each node represents a character, enabling efficient prefix-based searches. In Outlook, Tries can power autocompletion for email addresses, subject lines, or search queries by quickly retrieving all strings with a given prefix.<br>
+              <strong>Advantages:</strong> Extremely fast for prefix lookups (e.g., autocompletion); supports incremental search as the user types.<br>
+              <strong>Disadvantages:</strong> High memory usage, especially for large datasets with many unique strings; less efficient for non-prefix searches.<br>
+              <strong>Time Complexity:</strong> O(k) for insertion and lookup, where k is the length of the string.<br>
+              <strong>Space Complexity:</strong> O(ALPHABET_SIZE * k * n) where n is the number of strings, k is the average string length, and ALPHABET_SIZE is the character set size (e.g., 26 for lowercase letters).<br>
+              <strong>Code Implementation (C++):</strong><br>
+              Below is a Trie implementation for autocompleting email addresses (simplified to lowercase letters for demonstration).
+            </p>
+            <pre class="case-details__code">
+#include <string>
+#include <vector>
+
+struct TrieNode {
+    TrieNode* children[26];
+    bool isEnd;
+    TrieNode() : isEnd(false) {
+        for (int i = 0; i < 26; i++) children[i] = nullptr;
+    }
+};
+
+class Trie {
+private:
+    TrieNode* root;
+public:
+    Trie() { root = new TrieNode(); }
+    void insert(const std::string& word) {
+        TrieNode* node = root;
+        for (char c : word) {
+            int idx = c - 'a'; // Assumes lowercase letters
+            if (!node->children[idx]) node->children[idx] = new TrieNode();
+            node = node->children[idx];
+        }
+        node->isEnd = true;
+    }
+    std::vector<std::string> autocomplete(const std::string& prefix) {
+        TrieNode* node = root;
+        for (char c : prefix) {
+            int idx = c - 'a';
+            if (!node->children[idx]) return {};
+            node = node->children[idx];
+        }
+        std::vector<std::string> results;
+        collectWords(node, prefix, results);
+        return results;
+    }
+private:
+    void collectWords(TrieNode* node, std::string prefix, std::vector<std::string>& results) {
+        if (node->isEnd) results.push_back(prefix);
+        for (int i = 0; i < 26; i++) {
+            if (node->children[i]) {
+                char c = 'a' + i;
+                collectWords(node->children[i], prefix + c, results);
+            }
+        }
+    }
+};
+
+// Usage example:
+int main() {
+    Trie trie;
+    trie.insert("john");
+    trie.insert("jane");
+    auto suggestions = trie.autocomplete("j"); // Returns {"jane", "john"}
+    return 0;
+}
+            </pre>
+
+            <h4 class="case-details__subsubtitle">BM25/TF-IDF with Inverted Indexing</h4>
+            <p class="case-details__text">
+              <strong>Description:</strong> Inverted Indexing maps terms to the documents (emails) containing them, enabling fast retrieval. TF-IDF (Term Frequency-Inverse Document Frequency) scores terms based on their frequency in a document and rarity across all documents. BM25 builds on TF-IDF by adding document length normalization and tunable parameters for better ranking. In Outlook, this combination allows quick email retrieval and relevance ranking for search queries.<br>
+              <strong>Advantages:</strong> Inverted Indexing ensures fast lookup of emails containing specific terms; BM25/TF-IDF provides effective ranking by balancing term frequency and rarity.<br>
+              <strong>Disadvantages:</strong> Inverted Indexing requires significant memory for large datasets; BM25 parameter tuning (e.g., k1, b) can be complex and dataset-dependent.<br>
+              <strong>Time Complexity:</strong> Inverted Index construction: O(N * T) where N is the number of emails and T is the average number of terms per email. BM25 scoring: O(Q * D) where Q is the number of query terms and D is the number of emails containing those terms.<br>
+              <strong>Space Complexity:</strong> O(N * T) for the inverted index; additional O(N) for storing document lengths and term frequencies.<br>
+              <strong>Code Implementation (C++):</strong><br>
+              Below is an implementation combining Inverted Indexing with BM25 scoring.
+            </p>
+            <pre class="case-details__code">
+#include <vector>
+#include <string>
+#include <map>
+#include <cmath>
+
+class InvertedIndex {
+private:
+    std::map<std::string, std::vector<int>> index; // Term -> list of email IDs
+    std::vector<std::map<std::string, int>> docs; // Term frequencies per email
+    std::vector<int> docLengths; // Length of each email
+    double avgDocLen;
+    int numDocs;
+    double k1 = 1.5, b = 0.75; // BM25 parameters
+public:
+    InvertedIndex(const std::vector<std::vector<std::string>>& documents) {
+        numDocs = documents.size();
+        double totalLen = 0;
+        for (int i = 0; i < numDocs; i++) {
+            const auto& doc = documents[i];
+            std::map<std::string, int> tf;
+            for (const auto& term : doc) {
+                tf[term]++;
+                index[term].push_back(i);
+            }
+            docs.push_back(tf);
+            docLengths.push_back(doc.size());
+            totalLen += doc.size();
+        }
+        avgDocLen = totalLen / numDocs;
+    }
+
+    std::vector<std::pair<int, double>> search(const std::vector<std::string>& query) {
+        std::map<int, double> scores;
+        for (const auto& term : query) {
+            if (!index.count(term)) continue;
+            double idf = std::log((numDocs - index[term].size() + 0.5) / (index[term].size() + 0.5) + 1);
+            for (int docId : index[term]) {
+                double tf = docs[docId][term];
+                double docLen = docLengths[docId];
+                double score = idf * (tf * (k1 + 1)) / (tf + k1 * (1 - b + b * (docLen / avgDocLen)));
+                scores[docId] += score;
+            }
+        }
+        std::vector<std::pair<int, double>> rankedDocs;
+        for (const auto& [docId, score] : scores) {
+            rankedDocs.push_back({docId, score});
+        }
+        std::sort(rankedDocs.begin(), rankedDocs.end(),
+                  [](const auto& a, const auto& b) { return a.second > b.second; });
+        return rankedDocs;
+    }
+};
+
+// Usage example:
+int main() {
+    std::vector<std::vector<std::string>> emails = {
+        {"meeting", "with", "team"}, // Email 0
+        {"team", "lunch", "today"}   // Email 1
+    };
+    InvertedIndex idx(emails);
+    std::vector<std::string> query = {"team"};
+    auto results = idx.search(query); // Returns ranked email IDs
+    return 0;
+}
+            </pre>
+
             <h3 class="case-details__subtitle">Impact</h3>
             <p class="case-details__text">
-              [Insert potential impact of the solution, such as improved performance, user experience, or business outcomes.]
+              Implementing Trie Structure and BM25/TF-IDF with Inverted Indexing can significantly enhance Outlook's search experience. Tries enable instant autocompletion, allowing users to type email addresses or queries faster—for example, suggesting "john.doe@company.com" after typing "jo". Inverted Indexing with BM25 ensures that searches for terms like "meeting" return the most relevant emails quickly, ranked by importance. This reduces search latency, improves productivity, and enhances user satisfaction, reinforcing Outlook's position as a leading productivity tool within Microsoft's ecosystem.
             </p>
           </div>
         </div>

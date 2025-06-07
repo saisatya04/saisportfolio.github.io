@@ -34,23 +34,163 @@
     <main class="l-main">
       <!--===== CASE DETAILS =====-->
       <section class="case-details section" id="case-details">
-        <h2 class="section-title">Business Case: [Case Title]</h2>
+        <h2 class="section-title">Business Case: GitHub Gamify User Engagement</h2>
         <div class="case-details__container bd-grid">
           <div class="case-details__img">
-            <img src="assets/img/case-placeholder.jpg" alt="[Case Title]" />
+            <img src="assets/img/case-placeholder.jpg" alt="GitHub Gamify User Engagement" />
           </div>
           <div>
             <h3 class="case-details__subtitle">Overview</h3>
             <p class="case-details__text">
-              [Insert detailed overview of the business case here. Describe the problem, its impact, and the context within Microsoft's ecosystem.]
+              GitHub seeks to boost user engagement by gamifying participation, encouraging contributors to be more active and collaborative through game-like mechanics such as earning points, badges, and leaderboard rankings. The challenge is to design a system that rewards users based on their contribution patterns and network interactions, making the platform more engaging for its millions of users while maintaining computational efficiency.
             </p>
             <h3 class="case-details__subtitle">Proposed Solution</h3>
             <p class="case-details__text">
-              [Insert proposed solution or approach to address the business case. Highlight technical details, potential technologies, or strategies involved.]
+              To achieve this, GitHub can use non-AI algorithms: Kadane Algorithm, Breadth-First Search (BFS), and Depth-First Search (DFS). The Kadane Algorithm tracks contribution streaks for points or badges, BFS calculates collaboration scores for leaderboards, and DFS identifies collaboration clusters for additional rewards. Below is a detailed breakdown of each algorithm, including their advantages, disadvantages, time and space complexities, and C++ code implementations.
             </p>
+
+            <h4 class="case-details__subsubtitle">Kadane Algorithm</h4>
+            <p class="case-details__text">
+              <strong>Description:</strong> The Kadane Algorithm finds the maximum subarray sum in a sequence, adapted here to track contribution streaks. Contributions (e.g., commits, pull requests) are represented as a sequence of +1 (active days) and -1 (inactive days), and Kadane identifies the longest streak to award points or a "Streak Master" badge.<br>
+              <strong>Advantages:</strong> Efficiently identifies the longest streak in linear time; simple to implement.<br>
+              <strong>Disadvantages:</strong> Treats activity as a linear sequence, missing nuanced contribution patterns; may not account for contribution volume.<br>
+              <strong>Time Complexity:</strong> O(n) where n is the number of time periods (e.g., days).<br>
+              <strong>Space Complexity:</strong> O(1) as it uses constant extra space.<br>
+              <strong>Code Implementation (C++):</strong><br>
+              Below is an implementation of the Kadane Algorithm to find the longest contribution streak.
+            </p>
+            <pre class="case-details__code">
+#include <vector>
+
+class Kadane {
+public:
+    std::pair<int, std::pair<int, int>> findLongestStreak(const std::vector<int>& activity) {
+        int maxSoFar = activity[0], currMax = activity[0];
+        int start = 0, end = 0, tempStart = 0;
+        for (int i = 1; i < activity.size(); i++) {
+            if (activity[i] > currMax + activity[i]) {
+                currMax = activity[i];
+                tempStart = i;
+            } else {
+                currMax += activity[i];
+            }
+            if (currMax > maxSoFar) {
+                maxSoFar = currMax;
+                start = tempStart;
+                end = i;
+            }
+        }
+        return {maxSoFar, {start, end}};
+    }
+};
+
+// Usage example:
+int main() {
+    std::vector<int> activity = {1, -1, 1, 1, 1, -1}; // +1 for active day, -1 for inactive
+    Kadane kadane;
+    auto result = kadane.findLongestStreak(activity); // Returns longest streak and period
+    return 0;
+}
+            </pre>
+
+            <h4 class="case-details__subsubtitle">Breadth-First Search (BFS)</h4>
+            <p class="case-details__text">
+              <strong>Description:</strong> BFS traverses the contribution network (users as nodes, collaborations as edges) to calculate a collaboration score based on the number of users a contributor can reach. This score contributes to a leaderboard, rewarding users with high connectivity.<br>
+              <strong>Advantages:</strong> Accurately measures network reach; effective for leaderboard rankings.<br>
+              <strong>Disadvantages:</strong> High memory usage for large networks; does not account for the strength of connections.<br>
+              <strong>Time Complexity:</strong> O(V + E) where V is the number of users and E is the number of edges.<br>
+              <strong>Space Complexity:</strong> O(V) for the queue and visited set.<br>
+              <strong>Code Implementation (C++):</strong><br>
+              Below is a BFS implementation to calculate a collaboration score.
+            </p>
+            <pre class="case-details__code">
+#include <vector>
+#include <queue>
+
+class BFS {
+public:
+    int calculateCollaborationScore(int start, const std::vector<std::vector<int>>& graph) {
+        std::vector<bool> visited(graph.size(), false);
+        std::queue<int> q;
+        int score = 0;
+        q.push(start);
+        visited[start] = true;
+
+        while (!q.empty()) {
+            int node = q.front();
+            q.pop();
+            score += 10; // 10 points per reachable user
+            for (int neighbor : graph[node]) {
+                if (!visited[neighbor]) {
+                    visited[neighbor] = true;
+                    q.push(neighbor);
+                }
+            }
+        }
+        return score - 10; // Exclude the starting node
+    }
+};
+
+// Usage example:
+int main() {
+    std::vector<std::vector<int>> graph = {{1, 2}, {0, 3}, {0, 3}, {1, 2}};
+    BFS bfs;
+    int score = bfs.calculateCollaborationScore(0, graph); // Returns collaboration score
+    return 0;
+}
+            </pre>
+
+            <h4 class="case-details__subsubtitle">Depth-First Search (DFS)</h4>
+            <p class="case-details__text">
+              <strong>Description:</strong> DFS explores the contribution network to identify collaboration clusters (connected components). Users in large or active clusters receive a "Team Player" badge, encouraging group participation.<br>
+              <strong>Advantages:</strong> Identifies collaboration groups effectively; lower memory usage for deep graphs.<br>
+              <strong>Disadvantages:</strong> May not find the shortest paths; can be slow for very wide graphs.<br>
+              <strong>Time Complexity:</strong> O(V + E) where V is the number of users and E is the number of edges.<br>
+              <strong>Space Complexity:</strong> O(V) for the recursion stack and visited set.<br>
+              <strong>Code Implementation (C++):</strong><br>
+              Below is a DFS implementation to find collaboration clusters.
+            </p>
+            <pre class="case-details__code">
+#include <vector>
+
+class DFS {
+private:
+    void dfs(int node, const std::vector<std::vector<int>>& graph, std::vector<bool>& visited, std::vector<int>& cluster) {
+        visited[node] = true;
+        cluster.push_back(node);
+        for (int neighbor : graph[node]) {
+            if (!visited[neighbor]) {
+                dfs(neighbor, graph, visited, cluster);
+            }
+        }
+    }
+public:
+    std::vector<std::vector<int>> findClusters(const std::vector<std::vector<int>>& graph) {
+        std::vector<bool> visited(graph.size(), false);
+        std::vector<std::vector<int>> clusters;
+        for (int i = 0; i < graph.size(); i++) {
+            if (!visited[i]) {
+                std::vector<int> cluster;
+                dfs(i, graph, visited, cluster);
+                clusters.push_back(cluster);
+            }
+        }
+        return clusters;
+    }
+};
+
+// Usage example:
+int main() {
+    std::vector<std::vector<int>> graph = {{1, 2}, {0, 3}, {0, 3}, {1, 2}};
+    DFS dfs;
+    auto clusters = dfs.findClusters(graph); // Returns collaboration clusters
+    return 0;
+}
+            </pre>
+
             <h3 class="case-details__subtitle">Impact</h3>
             <p class="case-details__text">
-              [Insert potential impact of the solution, such as improved performance, user experience, or business outcomes.]
+              Gamifying GitHub with these algorithms can significantly boost user engagement. The Kadane Algorithm rewards users with points or badges for contribution streaks, motivating consistent activity. BFS-driven collaboration scores create competitive leaderboards, encouraging users to expand their networks. DFS-identified clusters award badges for teamwork, fostering collaboration. This gamified approach can increase user participation, enhance community interaction, and make GitHub a more engaging platform for developers.
             </p>
           </div>
         </div>
