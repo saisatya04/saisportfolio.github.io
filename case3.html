@@ -9,7 +9,21 @@
       href="https://cdn.jsdelivr.net/npm/boxicons@2.0.5/css/boxicons.min.css"
       rel="stylesheet"
     />
+    <!-- PRISM.JS CSS for Syntax Highlighting -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet">
     <title>Business Case Details - Sai's Portfolio</title>
+    <style>
+      .case_code {
+        background: #ede9fe;
+        border-radius: 4rem;
+        padding: 1rem;
+        overflow-x: auto;
+      }
+      .case-details__code {
+        color: #1e1b18;
+        font-size: 0.95rem;
+      }
+    </style>
   </head>
   <body>
     <!--===== HEADER =====-->
@@ -34,10 +48,10 @@
     <main class="l-main">
       <!--===== CASE DETAILS =====-->
       <section class="case-details section" id="case-details">
-        <h2 class="section-title">Business Case: GitHub Gamify User Engagement</h2>
+        <h2 class="section-title">Gamify Github for User Engagement</h2>
         <div class="case-details__container bd-grid">
-          <div class="case-details__img">
-            <img src="assets/img/case-placeholder.jpg" alt="GitHub Gamify User Engagement" />
+          <div class="case-details__img" style="width: 90%; height: 90%;">
+            <img src="assets/img/github.drawio.png" alt="GitHub Gamify User Engagement" />
           </div>
           <div>
             <h3 class="case-details__subtitle">Overview</h3>
@@ -51,15 +65,20 @@
 
             <h4 class="case-details__subsubtitle">Kadane Algorithm</h4>
             <p class="case-details__text">
-              <strong>Description:</strong> The Kadane Algorithm finds the maximum subarray sum in a sequence, adapted here to track contribution streaks. Contributions (e.g., commits, pull requests) are represented as a sequence of +1 (active days) and -1 (inactive days), and Kadane identifies the longest streak to award points or a "Streak Master" badge.<br>
-              <strong>Advantages:</strong> Efficiently identifies the longest streak in linear time; simple to implement.<br>
-              <strong>Disadvantages:</strong> Treats activity as a linear sequence, missing nuanced contribution patterns; may not account for contribution volume.<br>
+              <strong>Description:</strong> The Kadane Algorithm finds the maximum subarray sum in a sequence, adapted here to track contribution streaks. Contributions (e.g., commits, pull requests) are represented as a sequence of +1 (activity) and -1 (inactive days), and Kadane identifies the longest streak to award points or a "Streak Master" badge.<br>
+              <strong>Advantages:</strong> <ul>
+                  <li>Efficiently identifies the longest streak in linear time</li>
+                  <li>Simple to implement</li>
+                  <li>Motivates users</li>
+              </ul><br>
+              <strong>Disadvantages:</strong> Extra overhead for a functionality that is a fun feature rather than a useful feature.<br>
               <strong>Time Complexity:</strong> O(n) where n is the number of time periods (e.g., days).<br>
               <strong>Space Complexity:</strong> O(1) as it uses constant extra space.<br>
               <strong>Code Implementation (C++):</strong><br>
               Below is an implementation of the Kadane Algorithm to find the longest contribution streak.
-            </p>
-            <pre class="case-details__code">
+            </p><br>
+
+            <pre><code class="language-cpp case_code">
 #include <vector>
 
 class Kadane {
@@ -91,7 +110,7 @@ int main() {
     auto result = kadane.findLongestStreak(activity); // Returns longest streak and period
     return 0;
 }
-            </pre>
+            </code></pre>
 
             <h4 class="case-details__subsubtitle">Breadth-First Search (BFS)</h4>
             <p class="case-details__text">
@@ -102,8 +121,9 @@ int main() {
               <strong>Space Complexity:</strong> O(V) for the queue and visited set.<br>
               <strong>Code Implementation (C++):</strong><br>
               Below is a BFS implementation to calculate a collaboration score.
-            </p>
-            <pre class="case-details__code">
+            </p><br>
+
+            <pre><code class="language-cpp case_code">
 #include <vector>
 #include <queue>
 
@@ -138,7 +158,7 @@ int main() {
     int score = bfs.calculateCollaborationScore(0, graph); // Returns collaboration score
     return 0;
 }
-            </pre>
+            </code></pre>
 
             <h4 class="case-details__subsubtitle">Depth-First Search (DFS)</h4>
             <p class="case-details__text">
@@ -149,8 +169,9 @@ int main() {
               <strong>Space Complexity:</strong> O(V) for the recursion stack and visited set.<br>
               <strong>Code Implementation (C++):</strong><br>
               Below is a DFS implementation to find collaboration clusters.
-            </p>
-            <pre class="case-details__code">
+            </p><br>
+
+            <pre><code class="language-cpp case_code">
 #include <vector>
 
 class DFS {
@@ -186,7 +207,7 @@ int main() {
     auto clusters = dfs.findClusters(graph); // Returns collaboration clusters
     return 0;
 }
-            </pre>
+            </code></pre>
 
             <h3 class="case-details__subtitle">Impact</h3>
             <p class="case-details__text">
@@ -214,6 +235,9 @@ int main() {
 
     <!--===== SCROLL REVEAL =====-->
     <script src="https://unpkg.com/scrollreveal"></script>
+    <!--===== PRISM.JS =====-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-cpp.min.js"></script>
     <!--===== MAIN JS =====-->
     <script src="assets/js/main.js"></script>
   </body>

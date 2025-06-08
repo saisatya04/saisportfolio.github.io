@@ -1,14 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="assets/css/styles.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="assets/css/styles.css" />
     <!-- BOX ICONS -->
-    <link href="https://cdn.jsdelivr.net/npm/boxicons@2.0.5/css/boxicons.min.css" rel="stylesheet">
+    <link
+      href="https://cdn.jsdelivr.net/npm/boxicons@2.0.5/css/boxicons.min.css"
+      rel="stylesheet"
+    />
     <!-- PRISM.JS CSS for Syntax Highlighting -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet">
-    <title>Autoscaling Strategy - Sai's Portfolio</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css"
+      rel="stylesheet"
+    />
+    <title>
+      Autoscaling Strategy for a Streaming Platform on Azure - Sai's Portfolio
+    </title>
   </head>
   <body>
     <!-- HEADER -->
@@ -23,7 +31,9 @@
               <a href="index.html#home" class="nav__link">Home</a>
             </li>
             <li class="nav__item">
-              <a href="index.html#business-cases" class="nav__link">Back to Cases</a>
+              <a href="index.html#business-cases" class="nav__link"
+                >Back to Cases</a
+              >
             </li>
           </ul>
         </div>
@@ -33,79 +43,162 @@
     <main class="l-main">
       <!-- CASE DETAILS -->
       <section class="case-details section" id="case-details">
-        <h2 class="section-title">Autoscaling Strategy for a Streaming Platform on Azure</h2>
+        <h2 class="section-title">
+          Autoscaling Strategy for a Streaming Platform on Azure
+        </h2>
         <div class="case-details__container">
-          <div class="case-details__img">
-            <img src="assets/img/case-placeholder.jpg" alt="Autoscaling Strategy">
-          </div>
           <div>
             <h3 class="case-details__subtitle">Overview</h3>
             <p class="case-details__text">
-              This autoscaling strategy enables a streaming platform on Azure to handle traffic spikes during peak hours or new content releases while optimizing costs. It combines Azure’s real-time horizontal scaling with Mo’s Algorithm for periodic vertical scaling to ensure responsiveness and efficiency.
+              This autoscaling strategy enables a streaming platform on Azure to
+              handle traffic spikes during peak hours or new content releases
+              while optimizing costs. It combines Azure’s real-time horizontal
+              scaling with Mo’s Algorithm for periodic vertical scaling to
+              ensure responsiveness and efficiency.
             </p>
             <ul>
-              <li><strong>Horizontal Scaling</strong>: Dynamically adjusts instance counts to match real-time traffic demands.</li>
-              <li><strong>Vertical Scaling</strong>: Uses Mo’s Algorithm to analyze historical usage, optimizing CPU and memory per instance during stable periods.</li>
+              <li>
+                <strong>Horizontal Scaling:</strong> Dynamically adjusts
+                instance counts to match real-time traffic demands.
+              </li>
+              <li>
+                <strong>Vertical Scaling:</strong> Uses Mo’s Algorithm to
+                analyze historical usage, optimizing CPU and memory per instance
+                during stable periods.
+              </li>
             </ul>
 
             <div class="section">
               <h2>Key Components & System Design</h2>
               <ul>
-                <li><strong>Azure Autoscaling</strong>: Manages horizontal scaling by adding or removing instances (e.g., Virtual Machine Scale Sets) based on metrics like CPU usage or request rates.</li>
-                <li><strong>Mo’s Algorithm</strong>: Analyzes historical data to guide vertical scaling, resizing instance resources for long-term efficiency.</li>
-                <li><strong>Azure Infrastructure</strong>: Utilizes Virtual Machine Scale Sets (VMSS) or App Service for hosting, with Azure Monitor for metrics and Azure CLI/PowerShell for automation.</li>
+                <li>
+                  <strong>Azure Autoscaling:</strong> Manages horizontal scaling
+                  by adding or removing instances (e.g., Virtual Machine Scale
+                  Sets) based on metrics like CPU usage or request rates.
+                </li>
+                <li>
+                  <strong>Mo’s Algorithm:</strong> Analyzes historical data to
+                  guide vertical scaling, resizing instance resources for
+                  long-term efficiency.
+                </li>
+                <li>
+                  <strong>Azure Infrastructure:</strong> Utilizes Virtual
+                  Machine Scale Sets (VMSS) or App Service for hosting, with
+                  Azure Monitor for metrics and Azure CLI/PowerShell for
+                  automation.
+                </li>
               </ul>
+
+              <div class="case-details__img">
+                <img
+                  src="assets/img/Azure_img.drawio.png"
+                  alt="Autoscaling System Design Diagram"
+                />
+              </div>
             </div>
 
             <div class="section">
               <h2>Implementation</h2>
               <div class="highlight">
                 <h3>Horizontal Scaling with Azure</h3>
+                <br />
                 <h4>Purpose</h4>
-                <p>Adapts quickly to traffic surges, such as during popular show premieres or peak evening hours.</p>
-
+                <p>
+                  Adapts quickly to traffic surges, such as during popular show
+                  premieres or peak evening hours.
+                </p>
+                <br />
                 <h4>Setup</h4>
                 <ol>
                   <li>Host the platform on Azure VMSS or App Service.</li>
-                  <li>Configure autoscaling rules in Azure Monitor:
+                  <li>
+                    Configure autoscaling rules in Azure Monitor:
                     <ul>
-                      <li>Scale out by 1 instance if CPU usage exceeds 80% for 5 minutes.</li>
-                      <li>Scale out if request rate exceeds 1,000 requests per second.</li>
+                      <li>
+                        Scale out by 1 instance if CPU usage exceeds 80% for 5
+                        minutes.
+                      </li>
+                      <li>
+                        Scale out if request rate exceeds 1,000 requests per
+                        second.
+                      </li>
                     </ul>
                   </li>
-                  <li>Use Azure Load Balancer with IP hashing to distribute traffic, minimizing reassignment (~17% impact).</li>
+                  <li>
+                    Use Azure Load Balancer with IP hashing to distribute
+                    traffic, minimizing reassignment (~17% impact).
+                  </li>
                 </ol>
-
+                <br />
                 <h4>How It Works</h4>
                 <ul>
-                  <li><strong>Monitoring</strong>: Azure Monitor collects metrics (e.g., CPU usage, request rates) every 30–60 seconds.</li>
-                  <li><strong>Decision</strong>: Rules trigger scaling actions when thresholds are met (e.g., CPU > 80%).</li>
-                  <li><strong>Action</strong>: Provisions new instances in 2–5 minutes.</li>
-                  <li><strong>Example</strong>: At 8:00 PM, traffic spikes to 50,000 users. Azure scales from 100 to 500 instances, handling 100 users per instance.</li>
+                  <li>
+                    <strong>Monitoring:</strong> Azure Monitor collects metrics
+                    (e.g., CPU usage, request rates) every 30–60 seconds.
+                  </li>
+                  <li>
+                    <strong>Decision:</strong> Rules trigger scaling actions
+                    when thresholds are met (e.g., CPU > 80%).
+                  </li>
+                  <li>
+                    <strong>Action:</strong> Provisions new instances in 2–5
+                    minutes.
+                  </li>
+                  <li>
+                    <strong>Example:</strong> At 8:00 PM, traffic spikes to
+                    50,000 users. Azure scales from 100 to 500 instances,
+                    handling 100 users per instance.
+                  </li>
                 </ul>
-
+                <br />
                 <h4>Performance</h4>
                 <ul>
-                  <li><strong>Speed</strong>: Detects surges in 30–60 seconds; provisions instances in 2–5 minutes.</li>
-                  <li><strong>Benefits</strong>: Dynamically scales to match traffic (e.g., 600 instances for 60,000 users).</li>
-                  <li><strong>Challenges</strong>: 2–5 minute provisioning delay may cause brief overloads. No per-instance optimization.</li>
+                  <li>
+                    <strong>Speed:</strong> Detects surges in 30–60 seconds;
+                    provisions instances in 2–5 minutes.
+                  </li>
+                  <li>
+                    <strong>Benefits:</strong> Dynamically scales to match
+                    traffic (e.g., 600 instances for 60,000 users).
+                  </li>
+                  <li>
+                    <strong>Challenges:</strong> 2–5 minute provisioning delay
+                    may cause brief overloads.
+                  </li>
                 </ul>
               </div>
 
               <div class="highlight">
+                <br />
                 <h3>Vertical Scaling with Mo’s Algorithm</h3>
+                <br />
                 <h4>Purpose</h4>
-                <p>Optimizes resources by resizing instance CPU and memory based on historical trends, reducing costs during low-traffic periods.</p>
-
+                <p>
+                  Optimizes resources by resizing instance CPU and memory based
+                  on historical trends, reducing costs during low-traffic
+                  periods.
+                </p>
+                <br />
                 <h4>Setup</h4>
                 <ol>
-                  <li>Apply Mo’s Algorithm to analyze 24 hours of CPU usage data (1,440 minutes) across 144 ten-minute windows.</li>
-                  <li>Use Azure CLI or PowerShell scripts to resize instances based on algorithm insights.</li>
-                  <li>Schedule adjustments hourly to avoid peak-time disruptions.</li>
+                  <li>
+                    Apply Mo’s Algorithm to analyze 24 hours of CPU usage data
+                    (1,440 minutes) across 144 ten-minute windows.
+                  </li>
+                  <li>
+                    Use Azure CLI or PowerShell scripts to resize instances
+                    based on algorithm insights.
+                  </li>
+                  <li>
+                    Schedule adjustments hourly to avoid peak-time disruptions.
+                  </li>
                 </ol>
-
-                <h4>Example Code</h4>
-                <p>Python implementation of Mo’s Algorithm for CPU usage analysis:</p>
+                <br />
+                <h4>Sample Code for Mo's Aggregrator</h4>
+                <p>
+                  Python implementation of Mo’s Algorithm for CPU usage
+                  analysis:
+                </p>
                 <pre><code class="language-python case_code">import math
 
 # Input data: CPU usage over 1440 minutes (24 hours)
@@ -197,52 +290,208 @@ if scaling_decision["action"] == "scale_down":
 elif scaling_decision == "scale_up":
     print("Execute: az vm az --scale --scale --resource-group --resource --name my-resource-groupmyRG --name myResourceGroupmyVMSS --scale --set skuName=Standard_D4_v4.mySKU=Standard_4_v4")
 </code></pre>
-
+                <br />
                 <h4>How It Works</h4>
                 <ul>
-                  <li><strong>Analyzer</strong>: Mo’s Algorithm processes data in ~0.06 seconds, calculating averages like 40% CPU usage.</li>
-                  <li><strong>Decision</strong>: Resizes instances, e.g., from Standard_D4_v3 (4 vCPUs) to Standard_D2_v3 (2 vCPUs).</li>
-                  <li><strong>Action</strong>: Scripts scripts to resize VMs, requiring a 1–5 minute restart per instance.</li>
-                  <li><strong>Example</strong>: At 3:00 AM, usage detects high latency. By 4:00 AM, usage is resized to 2 vCPUs, cutting costs.</li></li>
+                  <li>
+                    <strong>Analyzer:</strong> Mo’s Algorithm processes data in
+                    ~0.06 seconds, calculating averages like 40% CPU usage.
+                  </li>
+                  <li>
+                    <strong>Decision:</strong> Resizes instances, e.g., from
+                    Standard_D4_v3 (4 vCPUs) to Standard_D2_v3 (2 vCPUs).
+                  </li>
+                  <li>
+                    <strong>Action:</strong> Scripts scripts to resize VMs,
+                    requiring a 1–5 minute restart per instance.
+                  </li>
+                  <li>
+                    <strong>Example:</strong> At 3:00 AM, usage detects high
+                    latency. By 4:00 AM, usage is resized to 2 vCPUs, cutting
+                    costs.
+                  </li>
                 </ul>
-
+                <br />
                 <h4>Performance</h4>
-                
                 <ul>
-                    <li><strong>Speed</strong>: Analysis of speed takes ~0.06 seconds; resizing takes 1–5 minutes per instance.</li>
-                    <li><strong>Benefits</strong>: Saves ~50% on compute costs by halving vCPUs; ideal for long-term efficiency.</li>
-                    <li><strong>Challenges</strong>: Brief downtime duration during VM restarts; requires custom scripting.</li>
+                  <li>
+                    <strong>Speed:</strong> Analysis of speed takes ~0.06
+                    seconds; resizing takes 1–5 minutes per instance.
+                  </li>
+                  <li>
+                    <strong>Benefits:</strong> Saves ~50% on compute costs by
+                    halving vCPUs; ideal for long-term efficiency.
+                  </li>
+                  <li>
+                    <strong>Challenges:</strong> Brief downtime duration during
+                    VM restarts; requires custom scripting.
+                  </li>
                 </ul>
+                <br />
+                <h4>Detailed Algorithm Breakdown</h4>
+                <p>
+                  <strong>Mo’s Algorithm for CPU Usage Analysis:</strong> Mo’s
+                  Algorithm is a query optimization technique that efficiently
+                  processes range queries on a static array by sorting queries
+                  to minimize pointer movements. In this context, it calculates
+                  the average CPU usage over 10-minute windows across a 24-hour
+                  period (1,440 minutes).
+                </p>
+                <ol>
+                  <li>
+                    <strong>Input and Setup:</strong> The algorithm takes an
+                    array of CPU usage values (e.g., cpu_usage[1440]) and a set
+                    of range queries (e.g., queries like [0,9], [10,19], ...,
+                    [1430,1439]). Each query represents a 10-minute window, so
+                    there are 144 queries (Q = 144, N = 1440).
+                  </li>
+                  <li>
+                    <strong>Query Sorting:</strong> Queries are sorted based on
+                    their left endpoint divided by a block size (block_size = √N
+                    ≈ 37). This ensures that queries within the same block are
+                    processed together, minimizing pointer movements. For
+                    example, query [0,9] and [10,19] are in the same block (0/37
+                    = 0), while [40,49] is in block 1 (40/37 ≈ 1).
+                  </li>
+                  <li>
+                    <strong>Pointer Movement:</strong> Two pointers, left and
+                    right, track the current range. For each query [q_left,
+                    q_right], the algorithm adjusts the pointers:
+                    <ul>
+                      <li>
+                        Extend right pointer: If right < q_right, increment
+                        right and add cpu_usage[right] to current_sum.
+                      </li>
+                      <li>
+                        Shrink right pointer: If right > q_right, subtract
+                        cpu_usage[right] from current_sum and decrement right.
+                      </li>
+                      <li>
+                        Extend left pointer: If left < q_left, subtract
+                        cpu_usage[left] from current_sum and increment left.
+                      </li>
+                      <li>
+                        Shrink left pointer: If left > q_left, decrement left
+                        and add cpu_usage[left] to current_sum.
+                      </li>
+                    </ul>
+                    After adjusting, compute the average: current_sum / (q_right
+                    - q_left + 1).
+                  </li>
+                  <li>
+                    <strong>Example:</strong> Consider a smaller dataset with N
+                    = 10, cpu_usage = [40, 41, 42, 43, 44, 50, 51, 52, 53, 54],
+                    and queries = [[0,2], [3,5], [6,8]]. Block size = √10 ≈ 3.
+                    <ul>
+                      <li>
+                        Sort queries: [0,2] (block 0), [3,5] (block 1), [6,8]
+                        (block 2).
+                      </li>
+                      <li>
+                        For [0,2]: Start with left = 0, right = -1. Extend right
+                        to 2 → current_sum = 40 + 41 + 42 = 123. Average = 123/3
+                        = 41.
+                      </li>
+                      <li>
+                        For [3,5]: Extend left to 3 → current_sum -= (40 + 41 +
+                        42) = 0. Extend right to 5 → current_sum += (43 + 44 +
+                        50) = 137. Average = 137/3 = 45.67.
+                      </li>
+                      <li>
+                        For [6,8]: Extend left to 6 → current_sum -= (43 + 44 +
+                        50) = 0. Extend right to 8 → current_sum += (51 + 52 +
+                        53) = 156. Average = 156/3 = 52.
+                      </li>
+                    </ul>
+                    The averages [41, 45.67, 52] are used to decide scaling
+                    actions.
+                  </li>
+                  <li>
+                    <strong>Scaling Decision:</strong> The overall average
+                    (e.g., (41 + 45.67 + 52)/3 ≈ 46.22) is compared to a
+                    threshold (50%). If below 25% (threshold * 0.5), scale down;
+                    if above 75% (threshold * 1.5), scale up.
+                  </li>
+                </ol>
               </div>
             </div>
 
             <div class="section">
               <h2>Coordination and Conflict Prevention</h2>
               <ul>
-                <li><strong>Resource Separation</strong>: Horizontal scaling uses request rates; vertical scaling uses 50% CPU and memory usage.</li>
-                <li><strong>Timing</strong>: Horizontal scaling reacts instantly (e.g., at 8:00 PM peaks); vertical scaling runs off-peak (e.g., at 4:00 AM).</li>
-                <li><strong>Workflow Example</strong>:
+                <li>
+                  <strong>Resource Separation:</strong> Horizontal scaling uses
+                  request rates; vertical scaling uses 50% CPU and memory usage.
+                </li>
+                <li>
+                  <strong>Timing:</strong> Horizontal scaling reacts instantly
+                  (e.g., at 8:00 PM peaks); vertical scaling runs off-peak
+                  (e.g., at 4:00 AM).
+                </li>
+                <li>
+                  <strong>Workflow Example:</strong>
                   <ul>
-                    <li>8:00 PM: Azure scales to 500 instances for 50,000 users.</li>
-                    <li>4:00 AM: Mo’s Algorithm resizes VMs to 2 vCPUs for low traffic.</li>
+                    <li>
+                      8:00 PM: Azure scales to 500 instances for 50,000 users.
+                    </li>
+                    <li>
+                      4:00 AM: Mo’s Algorithm resizes VMs to 2 vCPUs for low
+                      traffic.
+                    </li>
                   </ul>
                 </li>
               </ul>
             </div>
 
             <div class="section">
-              <h2>Results and Evaluation</h2>
+              <h2>Time and Space Complexity</h2>
               <ul>
-                <li><strong>Performance</strong>: Horizontal scaling ensures reliability for 50,000 users within 2–5 minutes; vertical scaling optimizes costs during low-traffic periods.</li>
-                <li><strong>Alignment with Goals</strong>: Enhances Mo’s Algorithm with vertical scaling, complementing Azure’s horizontal scaling.</li>
-                <li><strong>Limitations</strong>: Horizontal scaling may lag during rapid surges; vertical scaling involves brief downtime.</li>
+                <li>
+                  <strong>Horizontal Scaling with Azure:</strong>
+                  <ul>
+                    <li>
+                      <strong>Time Complexity:</strong> O(1) per scaling
+                      decision. Monitoring metrics (e.g., CPU usage, request
+                      rates) and making a scaling decision (e.g., comparing to a
+                      threshold) are constant-time operations, as is
+                      provisioning a single instance.
+                    </li>
+                    <li>
+                      <strong>Space Complexity:</strong> O(1). Azure Monitor
+                      stores a fixed window of metrics, and scaling rules are
+                      static, requiring constant space regardless of input size.
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <strong>Vertical Scaling with Mo’s Algorithm:</strong>
+                  <ul>
+                    <li>
+                      <strong>Time Complexity:</strong> O(N * sqrt(N) + Q log
+                      Q), where N is the number of data points (e.g., CPU usage
+                      over time) and Q is the number of queries (time windows).
+                      Sorting Q queries takes O(Q log Q), and processing queries
+                      with Mo’s Algorithm (via pointer movements) takes O(N *
+                      sqrt(N)).
+                    </li>
+                    <li>
+                      <strong>Space Complexity:</strong> O(N + Q). Stores the
+                      CPU usage array (size N), queries array (size Q), answers
+                      array (size Q), and a few variables, totaling O(N + Q)
+                      space.
+                    </li>
+                  </ul>
+                </li>
               </ul>
             </div>
 
             <div class="section">
               <h2>Conclusion</h2>
               <p>
-                This strategy balances performance and cost for a streaming platform on Azure. Horizontal scaling handles traffic surges within minutes, while Mo’s Algorithm optimizes resources during stable periods, ensuring efficiency and reliability.
+                This strategy balances performance and cost for a streaming
+                platform on Azure. Horizontal scaling handles traffic surges
+                within minutes, while Mo’s Algorithm optimizes resources during
+                stable periods, ensuring efficiency and reliability.
               </p>
             </div>
           </div>
@@ -254,10 +503,15 @@ elif scaling_decision == "scale_up":
     <footer class="footer">
       <p class="footer__title">Sai Satya</p>
       <div class="footer__social">
-        <a href="https://www.linkedin.com/in/sai-satya-49045426a1/" target="_blank" class="footer__icon">
+        <a
+          href="https://www.linkedin.com/in/sai-satya-49045426a1/"
+          target="_blank"
+          class="footer__icon"
+        >
           <i class="bx bxl-linkedin"></i>
         </a>
       </div>
+      <p class="footer__copy">&#169; Sai Satya. All rights reserved</p>
     </footer>
 
     <!-- SCROLL REVEAL -->
@@ -265,7 +519,7 @@ elif scaling_decision == "scale_up":
     <!-- PRISM.JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-text.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
     <!-- MAIN JS -->
     <script src="assets/js/main.js"></script>
   </body>

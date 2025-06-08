@@ -34,10 +34,10 @@
     <main class="l-main">
       <!--===== CASE DETAILS =====-->
       <section class="case-details section" id="case-details">
-        <h2 class="section-title">Business Case: Xbox Recommendation & Personalization</h2>
+        <h2 class="section-title">Xbox Recommendation & Personalization</h2>
         <div class="case-details__container bd-grid">
           <div class="case-details__img">
-            <img src="assets/img/case-placeholder.jpg" alt="Xbox Recommendation & Personalization" />
+            <img src="assets/img/xbox.drawio.png" alt="Xbox Recommendation & Personalization" />
           </div>
           <div>
             <h3 class="case-details__subtitle">Overview</h3>
@@ -46,7 +46,7 @@
             </p>
             <h3 class="case-details__subtitle">Proposed Solution</h3>
             <p class="case-details__text">
-              To address this, Xbox can implement a recommendation system using non-AI algorithms: KD-Tree, Distributions, Dyck Path, and Greedy Matching. Below is a detailed breakdown of each algorithm, including their advantages, disadvantages, time and space complexities, and C++ code implementations.
+              To address this, Xbox can implement a recommendation system using algorithms such as KD-Tree, Distributions, Dyck Path, and Greedy Matching. Below is a detailed breakdown of each algorithm, including their advantages, disadvantages, time and space complexities, and C++ code implementations.
             </p>
 
             <h4 class="case-details__subsubtitle">KD-Tree</h4>
@@ -56,7 +56,8 @@
               <strong>Disadvantages:</strong> Performance degrades in high dimensions due to the curse of dimensionality; requires balanced trees for optimal performance.<br>
               <strong>Time Complexity:</strong> Construction: O(n log n), Query: O(log n) on average, but can degrade to O(n) in high dimensions.<br>
               <strong>Space Complexity:</strong> O(n) for storing n user profiles.<br>
-              <strong>Code Implementation (C++):</strong><br>
+              <br>
+              <h3><strong>Code Implementation (C++):</strong></h3><br>
               Below is a simplified KD-Tree implementation for 2D points (e.g., hours in action and RPG genres).
             </p>
             <pre class="case-details__code language-python">
@@ -98,7 +99,7 @@ public:
               <strong>Disadvantages:</strong> Assumes past behavior predicts future preferences, which may not always hold; requires frequent updates to remain accurate.<br>
               <strong>Time Complexity:</strong> O(n) to compute a distribution from n data points (e.g., playtime per genre).<br>
               <strong>Space Complexity:</strong> O(k) where k is the number of categories (e.g., genres).<br>
-              <strong>Code Implementation (C++):</strong><br>
+              <h3><strong>Code Implementation (C++):</strong></h3><br>
               Below is a simple implementation to compute a genre preference distribution.
             </p>
             <pre class="case-details__code language-python">
@@ -139,7 +140,7 @@ int main() {
               <strong>Disadvantages:</strong> Oversimplifies engagement by using binary states; ignores nuances like session length.<br>
               <strong>Time Complexity:</strong> O(n) to compute a Dyck Path over n days.<br>
               <strong>Space Complexity:</strong> O(n) to store the path.<br>
-              <strong>Code Implementation (C++):</strong><br>
+              <h3><strong>Code Implementation (C++):</strong></h3><br>
               Below is an implementation to check if a sequence forms a valid Dyck Path and compute its height.
             </p>
             <pre class="case-details__code language-python">
@@ -176,7 +177,7 @@ int main() {
               <strong>Disadvantages:</strong> May miss globally optimal matches by focusing on local optima; might overfit to current preferences.<br>
               <strong>Time Complexity:</strong> O(n * m) where n is the number of users and m is the number of games.<br>
               <strong>Space Complexity:</strong> O(n + m) for storing user and game data.<br>
-              <strong>Code Implementation (C++):</strong><br>
+              <h3><strong>Code Implementation (C++):</strong></h3><br>
               Below is an implementation for Greedy Matching of users to games.
             </p>
             <pre class="case-details__code language-python">

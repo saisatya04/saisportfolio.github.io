@@ -34,10 +34,10 @@
     <main class="l-main">
       <!--===== CASE DETAILS =====-->
       <section class="case-details section" id="case-details">
-        <h2 class="section-title">Business Case: Outlook Loading & Searching Delay</h2>
+        <h2 class="section-title">Outlook Loading & Searching Delay</h2>
         <div class="case-details__container bd-grid">
           <div class="case-details__img">
-            <img src="assets/img/case-placeholder.jpg" alt="Outlook Loading & Searching Delay" />
+            <img src="assets/img/outlook.drawio.png" alt="Outlook Loading & Searching Delay" />
           </div>
           <div>
             <h3 class="case-details__subtitle">Overview</h3>
@@ -50,13 +50,13 @@
             </p>
 
             <h4 class="case-details__subsubtitle">Trie Structure</h4>
-            <p class="case-details__text">
+            <br><p class="case-details__text">
               <strong>Description:</strong> A Trie (prefix tree) is a tree-like data structure where each node represents a character, enabling efficient prefix-based searches. In Outlook, Tries can power autocompletion for email addresses, subject lines, or search queries by quickly retrieving all strings with a given prefix.<br>
               <strong>Advantages:</strong> Extremely fast for prefix lookups (e.g., autocompletion); supports incremental search as the user types.<br>
               <strong>Disadvantages:</strong> High memory usage, especially for large datasets with many unique strings; less efficient for non-prefix searches.<br>
               <strong>Time Complexity:</strong> O(k) for insertion and lookup, where k is the length of the string.<br>
               <strong>Space Complexity:</strong> O(ALPHABET_SIZE * k * n) where n is the number of strings, k is the average string length, and ALPHABET_SIZE is the character set size (e.g., 26 for lowercase letters).<br>
-              <strong>Code Implementation (C++):</strong><br>
+              <h3><strong>Code Implementation (C++):</strong></h3><br>
               Below is a Trie implementation for autocompleting email addresses (simplified to lowercase letters for demonstration).
             </p>
             <pre class="case-details__code">
@@ -125,7 +125,7 @@ int main() {
               <strong>Disadvantages:</strong> Inverted Indexing requires significant memory for large datasets; BM25 parameter tuning (e.g., k1, b) can be complex and dataset-dependent.<br>
               <strong>Time Complexity:</strong> Inverted Index construction: O(N * T) where N is the number of emails and T is the average number of terms per email. BM25 scoring: O(Q * D) where Q is the number of query terms and D is the number of emails containing those terms.<br>
               <strong>Space Complexity:</strong> O(N * T) for the inverted index; additional O(N) for storing document lengths and term frequencies.<br>
-              <strong>Code Implementation (C++):</strong><br>
+              <h3><strong>Code Implementation (C++):</strong></h3><br>
               Below is an implementation combining Inverted Indexing with BM25 scoring.
             </p>
             <pre class="case-details__code">
